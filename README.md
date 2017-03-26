@@ -1,6 +1,13 @@
 # LinkChecker
 Salesforce Knowledge Article LinkChecker
 
+**Contents**
+* [Background](https://github.com/marcf08/LinkChecker#background)
+* [Screenshots](https://github.com/marcf08/LinkChecker#screenshots)
+* [Usage](https://github.com/marcf08/LinkChecker#usage)
+* [Development Backlog](https://github.com/marcf08/LinkChecker#development-backlog)
+* [Release Notes/Issues](https://github.com/marcf08/LinkChecker#release-notesissues)
+
 Background
 ==========
 I write technical documentation for [MapAnything](http://mapanything.com/), a tech startup based on the Salesforce platform. Therefore I write
@@ -35,14 +42,13 @@ Note: This project is still quite early in development.
 * IDE: Eclipse Neon.2 Release (4.6.2)
 
 **Instructions**
-1. Export your articles via [Heroku Knowledge Exporter](https://kbapps2.herokuapp.com/).
-2. If you have multiple article types, simply add them all into one folder. I use a folder called "html" and drop everything in it.
+1. Export your articles via the [Heroku Knowledge Exporter](https://kbapps2.herokuapp.com/). Unzip them. 
+2. If you have multiple article types, simply add them all to one folder. I create a folder called "html" and drop everything in it.
 Make sure you keep the csv file that Heroku generates. LinkChecker uses this to map the file name to the article name.
 3. Download the LinkChecker jar file from this repository.
 4. Double-click the jar file.
-5. Point to the folder where stored your articles. LinkChecker performs a recusrive search (files within files), so just point it to the top level directory.
-6. LinkChecker should run and give you all the output you need to fix your links. LinkChecker reports the HTTP status code. Generally speaking, you want
-to look for status codes that are not 200. You might see a few 301s, 
+5. Point to the folder where stored your articles. LinkChecker performs a recursive search (files within files), so just point it to the top level directory.
+6. LinkChecker should run and give you all the output you need to fix your links. LinkChecker reports the HTTP status of your article and the links within it.
 
 **Output**
 LinkChecker reports the HTTP status code. Generally speaking, you want to look for status codes that are not 200. Redirects (3xx) won't affect your
@@ -57,8 +63,8 @@ end user, but you may want to fix them regardless.
 Development Backlog
 ===================
 Short Term
-* Test with Windows and Linux
-* Change from thread class to SingleThreadExecutor to prevent multiple threads running.
+* Test with Linux.
+* Change Links from thread class to SingleThreadExecutor to prevent multiple threads running.
 * Add Enable/Disable recursive search option.
 * Resolve command line stack trace for bad file path.
 * Add increased support for non-Salesforce articles.
@@ -68,9 +74,4 @@ Long Term
 
 Release Notes/Issues
 ====================
-* If LinkChecker is running, a user can browse to another file and run the LinkChecker again. This spans another thread and is not desirable. A solution for this has been added to the development backlog.
-
-
-
-
-
+* If LinkChecker is running, a user can browse to another file and run the LinkChecker again. This spans another thread and is not desirable since both threads output to the same text area. This issue has been added to the development backlog.
