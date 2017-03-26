@@ -16,11 +16,22 @@ a nice enough site, but there was no simple way to rip the HTML from the page an
 end of the day, one would have to use a web crawler to sort it out, and, frankly, I don't know enough Javascript to fix that
 quickly.
 
-...But I do know Java.
-
 The LinkChecker relies on you exporting your Knowledge Articles via the [Heroku Knowledge Exporter](https://kbapps2.herokuapp.com/). 
 If you can't export your artiles via the Heroku application, I apologize. This repo will not work for you just yet. Eventually,
 I'll get this application working via the Salesforce API. For now, however, this scanner simply matches the article name
 to the csv file exported via Heroku. It then pulls the links from the HTML and reports them to the user. 
 
+Usage
+=====
+Note: This project is still quite early in development.
 
+**Environment**
+OS: Mac OSX
+IDE: Eclipse Neon.2 Release (4.6.2)
+
+**Instructions**
+1. Clone this repo in Eclipse.
+2. Add the correct JAR files to the build path.
+  a. Download the JARs listed in the screenshot below.
+  b. Right-click the project -> Build Path -> Configure Build Path -> Add External JARs.
+  c.  
