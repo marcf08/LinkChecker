@@ -34,4 +34,3 @@ IDE: Eclipse Neon.2 Release (4.6.2)
 2. Add the correct JAR files to the build path.
   a. Download the JARs listed in the screenshot below.
   b. Right-click the project -> Build Path -> Configure Build Path -> Add External JARs.
-  c.  
