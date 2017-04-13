@@ -1,18 +1,45 @@
 package marcus.MA.com;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
 /*
  * This class does the heavy lifting. It both reads the csv file for the article name
  * and file pair. It searches the directory and finally pulls the links. Note that
@@ -29,24 +56,30 @@ public class Links extends Thread {
 	private ArrayList<String> content;
 	List<List<String>> nameLink;
 	String[] ar;
+	PhantomJSDriver phantomDriver;
 
-	public Links() {
-		files = new ArrayList<File>();
-		topLevelDir = new File(this.directory);
-		content = new ArrayList<String>();
-		nameLink = new ArrayList<>();
-	}
-
+	/**
+	 * This constructor instantiates the data members with the given directory.
+	 * @param directory the directory to pull links from
+	 */
 	public Links(String directory) {
 		files = new ArrayList<File>();
 		this.directory = directory;
 		topLevelDir = new File(this.directory);
 		content = new ArrayList<String>();
 		nameLink = new ArrayList<>();
+		startWebDriver();
 	}
-
-	public void setDir(String dir) {
-		this.directory = dir;
+	
+	private void startWebDriver() {
+		DesiredCapabilities dcap = new DesiredCapabilities();
+		String[] phantomArgs = new  String[] {
+		    "--webdriver-loglevel=NONE"
+		};
+		dcap.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
+		Logger log = Logger.getLogger("");
+		log.setLevel(Level.OFF);
+		phantomDriver = new PhantomJSDriver(dcap);	
 	}
 	
 	/*
@@ -118,8 +151,9 @@ public class Links extends Thread {
 					String absFinalurl = link.get(j).attr("abs:href");
 					int code = ping(absFinalurl);
 					System.out.println(absFinalurl);
-					System.out.println("          " + "RESPONSE = " + code);
-
+					System.out.print("          " + "RESPONSE = " + code);
+					System.out.println("          " + "REQUIRES LOGIN = " + isLoginRedirect(absFinalurl));
+					
 				}
 			}
 
@@ -131,9 +165,9 @@ public class Links extends Thread {
 		long total = endTime - startTime;
 		total = TimeUnit.SECONDS.convert(total, TimeUnit.NANOSECONDS);
 		System.out.println("Total time was " + total + " seconds.");
-		System.out.println("Found " + counter + " potential dead links");
-		System.out.println("Save this output and review your files for 404 Responses.");
-		
+		System.out.println("Save this output and review your files for 404 and true responses.");
+		phantomDriver.close();
+		phantomDriver.quit();
 	}
 	
 	/*
@@ -151,8 +185,21 @@ public class Links extends Thread {
 		} catch (IOException e) {
 			return -1;
 		}
-
 	}
 	
-
+	/*
+	 * This method checks the given URL to see if it redirects to a login page.
+	 * It accepts the initial address as a parameter. 
+	 * @param webAddress the initial address
+	 * @return true if the webAddress redirects to a login
+	 */
+	private boolean isLoginRedirect(String webAddress) {
+		phantomDriver.get(webAddress);
+		String finalUrl = phantomDriver.getCurrentUrl();
+		
+		if (finalUrl.contains("login?")) {
+			return true;
+		}
+		return false;
+	}
 }

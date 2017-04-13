@@ -105,6 +105,7 @@ public class Controller {
 	/*
 	 * This helper method performs the save logic.
 	 */
+	@SuppressWarnings("deprecation")
 	private void doSaveLogic() {
 		 try {
 			JFileChooser c = new JFileChooser();
