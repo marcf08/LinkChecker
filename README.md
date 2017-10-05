@@ -39,7 +39,7 @@ Note: This project is still quite early in development.
 
 **Environment**
 * OS: Mac OSX
-* IDE: Eclipse Neon.2 Release (4.6.2)
+* IDE: Eclipse Neon Release (4.6.2)
 
 **Instructions**
 1. Export your articles via the [Heroku Knowledge Exporter](https://kbapps2.herokuapp.com/). Unzip them. 
